@@ -3,44 +3,19 @@
 # name of this project
 project="name"
 modules="m1 m2"
+files="provider.tf main.tf variables.tf terraform.tfvars"
 
 # -- do not change --
 
-# for each module
-for m in ${modules} ; do
-  echo creating module ${m}
-  mkdir -p modules/${m}
-  pushd modules/${m}
-  touch variables.tf main.tf
-  
-  # create a null resource in the module
-  tee main.tf <<EOF
-# null resource ${m}
-resource null_resource "${m}" {
-}
-EOF
-  terraform fmt
-  popd
-  touch ${m}.tf
-
-  # call the module
-  tee ${m}.tf <<EOF
-module "${m}" {
-  source = "./modules/${m}/"
-}
-EOF
-done
-
-touch provider.tf main.tf variables.tf terraform.tfvars
+function add_example_readme_test(){
 mkdir -p example
 pushd example
-touch provider.tf main.tf variables.tf terraform.tfvars
+touch ${files}
 tee main.tf <<EOF
-module "${project}" {
+module "${1}" {
   source = "../"
 }
 EOF
-terraform fmt
 
 # testing
 touch .kitchen.yml Gemfile README.md
@@ -50,14 +25,20 @@ tee README.md <<EOF
 - install bundle
 - install kitchen-test
 \`\`\`
+# local path
 bundle install --path vendor/bundle
+
+# global path
+bundle install
 \`\`\`
+
 - test
 \`\`\`
 bundle exec kitchen converge
 bundle exec kitchen verify
 bundle exec kitchen destroy
 \`\`\`
+
 EOF
 
 tee Gemfile <<EOF
@@ -96,6 +77,37 @@ describe command('terraform state list') do
 end
 EOF
 popd
+}
 
+# for each module
+for m in ${modules} ; do
+  echo creating module ${m}
+  mkdir -p modules/${m}
+  pushd modules/${m}
+  touch ${files}
+  add_example_readme_test ${m}
+  
+  # create a null resource in the module
+  tee main.tf <<EOF
+# null resource ${m}
+resource null_resource "${m}" {
+}
+EOF
+
+  popd
+  touch ${m}.tf
+
+  # call the module
+  tee ${m}.tf <<EOF
+module "${m}" {
+  source = "./modules/${m}/"
+}
+EOF
+done
+
+touch ${files}
+
+
+add_example_readme_test ${project}
 
 tree -a
