@@ -15,6 +15,10 @@ tee main.tf <<EOF
 module "${1}" {
   source = "../"
 }
+
+output "${1}" {
+  value = module.${1}
+}
 EOF
 
 # testing
@@ -79,6 +83,10 @@ EOF
 popd
 }
 
+# base code
+touch ${files}
+add_example_readme_test ${project}
+
 # for each module
 for m in ${modules} ; do
   echo creating module ${m}
@@ -92,6 +100,10 @@ for m in ${modules} ; do
 # null resource ${m}
 resource null_resource "${m}" {
 }
+
+output "${m}" {
+  value = "from ${m}"
+}
 EOF
 
   popd
@@ -102,12 +114,12 @@ EOF
 module "${m}" {
   source = "./modules/${m}/"
 }
+
+output "${m}" {
+  value = module.${m}
+}
 EOF
 done
 
-touch ${files}
-
-
-add_example_readme_test ${project}
 
 tree -a

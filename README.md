@@ -74,3 +74,8 @@ files="provider.tf main.tf variables.tf terraform.tfvars"
                 └── integration
                     └── default
 ```
+
+## TODO
+
+## DONE
+- [x] outputs
