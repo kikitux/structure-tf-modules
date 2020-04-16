@@ -24,7 +24,21 @@ EOF
 # testing
 touch .kitchen.yml Gemfile README.md
 tee README.md <<EOF
-#
+# README for ${1}/example
+
+This code uses ${1} as module
+
+## how to run terraform code
+- terraform init
+- terraform plan
+- terraform apply
+
+## how to check the state
+- terraform state list
+
+## how to destroy
+- terraform destroy
+
 ## how to test
 - install bundle
 - install kitchen-test
