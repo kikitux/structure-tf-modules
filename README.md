@@ -74,6 +74,21 @@ files="provider.tf main.tf variables.tf terraform.tfvars"
                 └── integration
                     └── default
 ```
+## TO TEST
+
+Before
+
+```
+gem install --user-install bundle
+bundle install --path vendor/bundle
+```
+
+Test
+
+```
+cd <path>
+bundle exec kitchen test
+```
 
 ## TODO
 
