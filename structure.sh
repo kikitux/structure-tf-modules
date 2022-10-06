@@ -61,7 +61,7 @@ EOF
 
 tee Gemfile <<EOF
 source "https://rubygems.org/" do
-  gem "kitchen-terraform", "~> 4.0"
+  gem "kitchen-terraform", "~> 6.0"
 end
 EOF
 
